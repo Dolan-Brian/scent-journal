@@ -1,24 +1,98 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
-  component: Index,
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Scent Log — Private Fragrance Journal" },
+      {
+        name: "description",
+        content:
+          "Sign in to Scent Log, a private journal for the fragrances you've sampled, rated, and bought.",
+      },
+      { property: "og:title", content: "Scent Log — Private Fragrance Journal" },
+      {
+        property: "og:description",
+        content: "A private journal for the fragrances you've sampled, rated, and bought.",
+      },
+    ],
+  }),
+  component: SignInPage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function SignInPage() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [pending, setPending] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user) navigate({ to: "/library", replace: true });
+    });
+  }, [navigate]);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setPending(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setPending(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    navigate({ to: "/library", replace: true });
+  }
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="flex min-h-screen items-center justify-center bg-background px-6">
+      <div className="w-full max-w-sm">
+        <h1 className="font-serif text-3xl tracking-tight text-foreground">Scent Log</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Your private record of every fragrance you've tried.
+        </p>
+
+        {!isSupabaseConfigured && (
+          <p className="mt-6 rounded-md border border-border bg-muted p-3 text-xs text-muted-foreground">
+            Database connection not configured yet — add your Supabase project URL and publishable
+            key to enable sign-in.
+          </p>
+        )}
+
+        <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <Button type="submit" className="w-full" disabled={pending || !isSupabaseConfigured}>
+            {pending ? "Signing in…" : "Sign in"}
+          </Button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -10,33 +10,87 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthenticatedLibraryIndexRouteImport } from './routes/_authenticated/library.index'
+import { Route as AuthenticatedLibraryNewRouteImport } from './routes/_authenticated/library.new'
+import { Route as AuthenticatedLibraryIdIndexRouteImport } from './routes/_authenticated/library.$id.index'
+import { Route as AuthenticatedLibraryIdEditRouteImport } from './routes/_authenticated/library.$id.edit'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedLibraryIndexRoute =
+  AuthenticatedLibraryIndexRouteImport.update({
+    id: '/library/',
+    path: '/library/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLibraryNewRoute = AuthenticatedLibraryNewRouteImport.update({
+  id: '/library/new',
+  path: '/library/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLibraryIdIndexRoute =
+  AuthenticatedLibraryIdIndexRouteImport.update({
+    id: '/library/$id/',
+    path: '/library/$id/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLibraryIdEditRoute =
+  AuthenticatedLibraryIdEditRouteImport.update({
+    id: '/library/$id/edit',
+    path: '/library/$id/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/library/new': typeof AuthenticatedLibraryNewRoute
+  '/library/': typeof AuthenticatedLibraryIndexRoute
+  '/library/$id/edit': typeof AuthenticatedLibraryIdEditRoute
+  '/library/$id/': typeof AuthenticatedLibraryIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/library/new': typeof AuthenticatedLibraryNewRoute
+  '/library': typeof AuthenticatedLibraryIndexRoute
+  '/library/$id/edit': typeof AuthenticatedLibraryIdEditRoute
+  '/library/$id': typeof AuthenticatedLibraryIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/_authenticated/library/new': typeof AuthenticatedLibraryNewRoute
+  '/_authenticated/library/': typeof AuthenticatedLibraryIndexRoute
+  '/_authenticated/library/$id/edit': typeof AuthenticatedLibraryIdEditRoute
+  '/_authenticated/library/$id/': typeof AuthenticatedLibraryIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/library/new' | '/library/' | '/library/$id/edit' | '/library/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/library/new' | '/library' | '/library/$id/edit' | '/library/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/_authenticated/library/new'
+    | '/_authenticated/library/'
+    | '/_authenticated/library/$id/edit'
+    | '/_authenticated/library/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +102,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/library/': {
+      id: '/_authenticated/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof AuthenticatedLibraryIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/library/new': {
+      id: '/_authenticated/library/new'
+      path: '/library/new'
+      fullPath: '/library/new'
+      preLoaderRoute: typeof AuthenticatedLibraryNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/library/$id/': {
+      id: '/_authenticated/library/$id/'
+      path: '/library/$id'
+      fullPath: '/library/$id/'
+      preLoaderRoute: typeof AuthenticatedLibraryIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/library/$id/edit': {
+      id: '/_authenticated/library/$id/edit'
+      path: '/library/$id/edit'
+      fullPath: '/library/$id/edit'
+      preLoaderRoute: typeof AuthenticatedLibraryIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedLibraryNewRoute: typeof AuthenticatedLibraryNewRoute
+  AuthenticatedLibraryIndexRoute: typeof AuthenticatedLibraryIndexRoute
+  AuthenticatedLibraryIdEditRoute: typeof AuthenticatedLibraryIdEditRoute
+  AuthenticatedLibraryIdIndexRoute: typeof AuthenticatedLibraryIdIndexRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedLibraryNewRoute: AuthenticatedLibraryNewRoute,
+  AuthenticatedLibraryIndexRoute: AuthenticatedLibraryIndexRoute,
+  AuthenticatedLibraryIdEditRoute: AuthenticatedLibraryIdEditRoute,
+  AuthenticatedLibraryIdIndexRoute: AuthenticatedLibraryIdIndexRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
