@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as AuthenticatedLibraryRouteImport } from './routes/_authenticated/library'
+import { Route as AuthenticatedLibraryIndexRouteImport } from './routes/_authenticated/library.index'
 import { Route as AuthenticatedLibraryNewRouteImport } from './routes/_authenticated/library.new'
 
 const IndexRoute = IndexRouteImport.update({
@@ -23,45 +23,46 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedLibraryRoute = AuthenticatedLibraryRouteImport.update({
-  id: '/library',
-  path: '/library',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
+const AuthenticatedLibraryIndexRoute =
+  AuthenticatedLibraryIndexRouteImport.update({
+    id: '/library/',
+    path: '/library/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedLibraryNewRoute = AuthenticatedLibraryNewRouteImport.update({
-  id: '/new',
-  path: '/new',
-  getParentRoute: () => AuthenticatedLibraryRoute,
+  id: '/library/new',
+  path: '/library/new',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/library': typeof AuthenticatedLibraryRouteWithChildren
   '/library/new': typeof AuthenticatedLibraryNewRoute
+  '/library/': typeof AuthenticatedLibraryIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/library': typeof AuthenticatedLibraryRouteWithChildren
   '/library/new': typeof AuthenticatedLibraryNewRoute
+  '/library': typeof AuthenticatedLibraryIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/_authenticated/library': typeof AuthenticatedLibraryRouteWithChildren
   '/_authenticated/library/new': typeof AuthenticatedLibraryNewRoute
+  '/_authenticated/library/': typeof AuthenticatedLibraryIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/library' | '/library/new'
+  fullPaths: '/' | '/library/new' | '/library/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/library' | '/library/new'
+  to: '/' | '/library/new' | '/library'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
-    | '/_authenticated/library'
     | '/_authenticated/library/new'
+    | '/_authenticated/library/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -85,40 +86,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/library': {
-      id: '/_authenticated/library'
+    '/_authenticated/library/': {
+      id: '/_authenticated/library/'
       path: '/library'
-      fullPath: '/library'
-      preLoaderRoute: typeof AuthenticatedLibraryRouteImport
+      fullPath: '/library/'
+      preLoaderRoute: typeof AuthenticatedLibraryIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/library/new': {
       id: '/_authenticated/library/new'
-      path: '/new'
+      path: '/library/new'
       fullPath: '/library/new'
       preLoaderRoute: typeof AuthenticatedLibraryNewRouteImport
-      parentRoute: typeof AuthenticatedLibraryRoute
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
-interface AuthenticatedLibraryRouteChildren {
-  AuthenticatedLibraryNewRoute: typeof AuthenticatedLibraryNewRoute
-}
-
-const AuthenticatedLibraryRouteChildren: AuthenticatedLibraryRouteChildren = {
-  AuthenticatedLibraryNewRoute: AuthenticatedLibraryNewRoute,
-}
-
-const AuthenticatedLibraryRouteWithChildren =
-  AuthenticatedLibraryRoute._addFileChildren(AuthenticatedLibraryRouteChildren)
-
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedLibraryRoute: typeof AuthenticatedLibraryRouteWithChildren
+  AuthenticatedLibraryNewRoute: typeof AuthenticatedLibraryNewRoute
+  AuthenticatedLibraryIndexRoute: typeof AuthenticatedLibraryIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedLibraryRoute: AuthenticatedLibraryRouteWithChildren,
+  AuthenticatedLibraryNewRoute: AuthenticatedLibraryNewRoute,
+  AuthenticatedLibraryIndexRoute: AuthenticatedLibraryIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
