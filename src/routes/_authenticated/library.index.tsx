@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RatingStars } from "@/components/RatingStars";
 
-export const Route = createFileRoute("/_authenticated/library")({
+export const Route = createFileRoute("/_authenticated/library/")({
   head: () => ({
     meta: [
       { title: "My Library — Scent Log" },
