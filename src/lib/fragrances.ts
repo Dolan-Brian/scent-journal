@@ -1,5 +1,8 @@
 import { supabase } from "./supabase";
 
+/** The table in the connected Supabase project (note the capital F). */
+const TABLE = "Fragrances";
+
 export interface Fragrance {
   id: string;
   created_at: string;
@@ -29,7 +32,7 @@ export const emptyFragrance: FragranceInput = {
 
 export async function listFragrances(): Promise<Fragrance[]> {
   const { data, error } = await supabase
-    .from("fragrances")
+    .from(TABLE)
     .select("*")
     .order("created_at", { ascending: false });
   if (error) throw error;
@@ -37,7 +40,7 @@ export async function listFragrances(): Promise<Fragrance[]> {
 }
 
 export async function getFragrance(id: string): Promise<Fragrance> {
-  const { data, error } = await supabase.from("fragrances").select("*").eq("id", id).single();
+  const { data, error } = await supabase.from(TABLE).select("*").eq("id", id).single();
   if (error) throw error;
   return data as Fragrance;
 }
@@ -46,7 +49,7 @@ export async function createFragrance(input: FragranceInput): Promise<Fragrance>
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) throw userError;
   const { data, error } = await supabase
-    .from("fragrances")
+    .from(TABLE)
     .insert({ ...input, user_id: userData.user?.id })
     .select()
     .single();
@@ -56,7 +59,7 @@ export async function createFragrance(input: FragranceInput): Promise<Fragrance>
 
 export async function updateFragrance(id: string, input: FragranceInput): Promise<Fragrance> {
   const { data, error } = await supabase
-    .from("fragrances")
+    .from(TABLE)
     .update(input)
     .eq("id", id)
     .select()
@@ -66,6 +69,6 @@ export async function updateFragrance(id: string, input: FragranceInput): Promis
 }
 
 export async function deleteFragrance(id: string): Promise<void> {
-  const { error } = await supabase.from("fragrances").delete().eq("id", id);
+  const { error } = await supabase.from(TABLE).delete().eq("id", id);
   if (error) throw error;
 }
