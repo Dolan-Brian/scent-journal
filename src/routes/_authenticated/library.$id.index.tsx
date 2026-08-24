@@ -19,9 +19,9 @@ import {
 export const Route = createFileRoute("/_authenticated/library/$id/")({
   head: () => ({
     meta: [
-      { title: "Fragrance Details — Scent Log" },
+      { title: "Fragrance Details — Top Notes" },
       { name: "description", content: "Full details for one logged fragrance." },
-      { property: "og:title", content: "Fragrance Details — Scent Log" },
+      { property: "og:title", content: "Fragrance Details — Top Notes" },
       { property: "og:description", content: "Full details for one logged fragrance." },
     ],
   }),

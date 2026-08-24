@@ -79,9 +79,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Scent Log" },
+      { title: "Top Notes" },
       { name: "description", content: "A private journal for the fragrances you've tried." },
-      { property: "og:title", content: "Scent Log" },
+      { property: "og:title", content: "Top Notes" },
       {
         property: "og:description",
         content: "A private journal for the fragrances you've tried.",

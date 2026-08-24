@@ -8,9 +8,9 @@ import { RatingStars } from "@/components/RatingStars";
 export const Route = createFileRoute("/_authenticated/library/")({
   head: () => ({
     meta: [
-      { title: "My Library — Scent Log" },
+      { title: "My Library — Top Notes" },
       { name: "description", content: "Every fragrance you've logged, with brand and your rating." },
-      { property: "og:title", content: "My Library — Scent Log" },
+      { property: "og:title", content: "My Library — Top Notes" },
       {
         property: "og:description",
         content: "Every fragrance you've logged, with brand and your rating.",

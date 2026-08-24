@@ -29,7 +29,7 @@ function AuthenticatedLayout() {
       <header className="border-b border-border">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
           <Link to="/library" className="font-serif text-lg tracking-tight text-foreground">
-            Scent Log
+            Top Notes
           </Link>
           <div className="flex items-center gap-2">
             <Button asChild variant="secondary" size="sm">

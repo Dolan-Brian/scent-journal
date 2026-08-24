@@ -7,9 +7,9 @@ import { FragranceForm } from "@/components/FragranceForm";
 export const Route = createFileRoute("/_authenticated/library/$id/edit")({
   head: () => ({
     meta: [
-      { title: "Edit Fragrance — Scent Log" },
+      { title: "Edit Fragrance — Top Notes" },
       { name: "description", content: "Update the details of a logged fragrance." },
-      { property: "og:title", content: "Edit Fragrance — Scent Log" },
+      { property: "og:title", content: "Edit Fragrance — Top Notes" },
       { property: "og:description", content: "Update the details of a logged fragrance." },
     ],
   }),
