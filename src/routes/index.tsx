@@ -10,13 +10,13 @@ export const Route = createFileRoute("/")({
   ssr: false,
   head: () => ({
     meta: [
-      { title: "Scent Log — Private Fragrance Journal" },
+      { title: "Top Notes — Private Fragrance Journal" },
       {
         name: "description",
         content:
-          "Sign in to Scent Log, a private journal for the fragrances you've sampled, rated, and bought.",
+          "Sign in to Top Notes, a private journal for the fragrances you've sampled, rated, and bought.",
       },
-      { property: "og:title", content: "Scent Log — Private Fragrance Journal" },
+      { property: "og:title", content: "Top Notes — Private Fragrance Journal" },
       {
         property: "og:description",
         content: "A private journal for the fragrances you've sampled, rated, and bought.",
@@ -53,7 +53,7 @@ function SignInPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-6">
       <div className="w-full max-w-sm">
-        <h1 className="font-serif text-3xl tracking-tight text-foreground">Scent Log</h1>
+        <h1 className="font-serif text-3xl tracking-tight text-foreground">Top Notes</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           Your private record of every fragrance you've tried.
         </p>
