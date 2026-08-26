@@ -95,7 +95,8 @@ matching exactly this shape:
 
       return Response.json(recommendation);
     } catch (err) {
-      return Response.json({ error: `Server error: ${err.message}` }, { status: 500 });
+      const message = err instanceof Error ? err.message : String(err);
+      return Response.json({ error: `Server error: ${message}` }, { status: 500 });
     }
   }),
 };
