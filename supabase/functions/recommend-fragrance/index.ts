@@ -18,7 +18,7 @@ export default {
       // Step 1: fetch this user's own fragrances, rated 3 or higher
       // ctx.supabase is a client already scoped to the logged-in user
       const { data: fragrances, error: dbError } = await ctx.supabase
-        .from("fragrances")
+        .from("Fragrances")
         .select("name, brand, my_rating, notes, perfumer")
         .gte("my_rating", 3);
 
