@@ -4,6 +4,7 @@ import { listFragrances } from "@/lib/fragrances";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { RatingStars } from "@/components/RatingStars";
+import { RecommendationPanel } from "@/components/RecommendationPanel";
 
 export const Route = createFileRoute("/_authenticated/library/")({
   head: () => ({
@@ -45,12 +46,13 @@ function LibraryPage() {
         <Button asChild className="mt-5">
           <Link to="/library/new">Add fragrance</Link>
         </Button>
+        <RecommendationPanel />
       </div>
     );
 
   return (
     <div>
-      <h1 className="font-serif text-2xl tracking-tight text-foreground">
+      <h1 className="font-display text-3xl tracking-tight text-foreground">
         My library
         <span className="ml-2 align-middle text-sm font-sans text-muted-foreground">
           {data.length} {data.length === 1 ? "entry" : "entries"}
@@ -61,13 +63,15 @@ function LibraryPage() {
         {data.map((f) => (
           <Link key={f.id} to="/library/$id" params={{ id: f.id }} className="block">
             <Card className="h-full gap-2 p-5 transition-colors hover:border-foreground/30">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground">{f.brand}</p>
-              <h2 className="font-serif text-lg leading-tight text-foreground">{f.name}</h2>
+              <p className="text-[0.7rem] uppercase tracking-[0.2em] text-sage">{f.brand}</p>
+              <h2 className="font-display text-xl leading-tight text-foreground">{f.name}</h2>
               <RatingStars value={f.my_rating} />
             </Card>
           </Link>
         ))}
       </div>
+
+      <RecommendationPanel />
     </div>
   );
 }
