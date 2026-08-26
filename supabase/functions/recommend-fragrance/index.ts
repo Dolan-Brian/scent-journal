@@ -2,6 +2,14 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "jsr:@supabase/server@^1";
 
+interface FragranceRow {
+  name: string;
+  brand: string;
+  my_rating: number | null;
+  notes: string | null;
+  perfumer: string | null;
+}
+
 console.info("recommend-fragrance function started");
 
 export default {
@@ -15,12 +23,11 @@ export default {
     }
 
     try {
-      // Step 1: fetch this user's own fragrances, rated 3 or higher
-      // ctx.supabase is a client already scoped to the logged-in user
       const { data: fragrances, error: dbError } = await ctx.supabase
         .from("Fragrances")
         .select("name, brand, my_rating, notes, perfumer")
-        .gte("my_rating", 3);
+        .gte("my_rating", 3)
+        .returns<FragranceRow[]>();
 
       if (dbError) {
         return Response.json({ error: dbError.message }, { status: 500 });
@@ -36,8 +43,8 @@ export default {
       // Notably: no user_id, no email, no account info of any kind is
       // included here - only fragrance name, brand, rating, and notes.
       const fragranceList = fragrances
-        .map(f => `- ${f.name} by ${f.brand}${f.perfumer ? ` (perfumer: ${f.perfumer})` : ""} (rated ${f.my_rating}/5)${f.notes ? `: "${f.notes}"` : ""}`)
-        .join("\n");
+                .map(f => `- ${f.name} by ${f.brand}${f.perfumer ? ` (perfumer: ${f.perfumer})` : ""} (rated ${f.my_rating ?? "?"}/5)${f.notes ? `: "${f.notes}"` : ""}`)
+                .join("\n");
 
       const systemPrompt = `You are a knowledgeable fragrance expert. Given someone's
 highly-rated fragrances and their personal notes about them, identify real
@@ -89,7 +96,8 @@ matching exactly this shape:
 
       return Response.json(recommendation);
     } catch (err) {
-      return Response.json({ error: `Server error: ${err.message}` }, { status: 500 });
+      const message = err instanceof Error ? err.message : String(err);
+      return Response.json({ error: `Server error: ${message}` }, { status: 500 });
     }
   }),
 };
