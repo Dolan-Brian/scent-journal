@@ -2,6 +2,13 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { withSupabase } from "jsr:@supabase/server@^1";
 
+interface FragranceRow {
+  name: string;
+  brand: string;
+  my_rating: number | null;
+  notes: string | null;
+}
+
 console.info("recommend-fragrance function started");
 
 export default {
