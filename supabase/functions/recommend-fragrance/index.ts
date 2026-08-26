@@ -22,12 +22,11 @@ export default {
     }
 
     try {
-      // Step 1: fetch this user's own fragrances, rated 3 or higher
-      // ctx.supabase is a client already scoped to the logged-in user
       const { data: fragrances, error: dbError } = await ctx.supabase
-        .from("fragrances")
-        .select("name, brand, my_rating, notes, perfumer")
-        .gte("my_rating", 3);
+        .from("Fragrances")
+        .select("name, brand, my_rating, notes")
+        .gte("my_rating", 3)
+        .returns<FragranceRow[]>();
 
       if (dbError) {
         return Response.json({ error: dbError.message }, { status: 500 });
@@ -43,7 +42,7 @@ export default {
       // Notably: no user_id, no email, no account info of any kind is
       // included here - only fragrance name, brand, rating, and notes.
       const fragranceList = fragrances
-        .map(f => `- ${f.name} by ${f.brand}${f.perfumer ? ` (perfumer: ${f.perfumer})` : ""} (rated ${f.my_rating}/5)${f.notes ? `: "${f.notes}"` : ""}`)
+        .map(f => `- ${f.name} by ${f.brand} (rated ${f.my_rating ?? "?"}/5)${f.notes ? `: "${f.notes}"` : ""}`)
         .join("\n");
 
       const systemPrompt = `You are a knowledgeable fragrance expert. Given someone's
