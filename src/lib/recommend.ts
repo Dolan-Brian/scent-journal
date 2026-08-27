@@ -17,9 +17,20 @@ export type RecommendationResult = {
  * fragrances rated 3 or higher yet") instead of a generic failure.
  */
 export async function recommendFragrances(): Promise<RecommendationResult> {
+  // Make sure we send the *user's* JWT, not just the publishable key.
+  const { data: sessionData } = await supabase.auth.getSession();
+  const accessToken = sessionData.session?.access_token;
+
+  if (!accessToken) {
+    throw new Error("Your session has expired. Please sign in again.");
+  }
+
   const { data, error } = await supabase.functions.invoke<
     RecommendationResult & { error?: string; message?: string }
-  >("recommend-fragrance", { method: "POST" });
+  >("recommend-fragrance", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
 
   if (error) {
     throw new Error(await extractFunctionErrorMessage(error));
