@@ -11,7 +11,7 @@ interface FragranceRow {
 console.info("recommend-fragrance function started");
 
 export default {
-  fetch: withSupabase({ auth: ["publishable"] }, async (req, ctx) => {
+  fetch: withSupabase({ auth: "user" }, async (req, ctx) => {
     // "publishable" mode respects Row Level Security - this function only
     // ever sees the currently logged-in user's own fragrance data, never
     // anyone else's, and never bypasses RLS the way "secret" mode would.
