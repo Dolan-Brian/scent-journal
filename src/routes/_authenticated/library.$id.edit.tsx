@@ -46,6 +46,7 @@ function EditFragrancePage() {
           initial={{
             name: data.name,
             brand: data.brand,
+            perfumer: data.perfumer,
             price_paid: data.price_paid,
             where_purchased: data.where_purchased,
             date_sampled: data.date_sampled,
