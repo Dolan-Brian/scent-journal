@@ -62,6 +62,14 @@ export function FragranceForm({
           />
         </div>
         <div className="space-y-2">
+          <Label htmlFor="perfumer">Perfumer</Label>
+          <Input
+            id="perfumer"
+            value={form.perfumer ?? ""}
+            onChange={(e) => set("perfumer", textOrNull(e.target.value))}
+          />
+        </div>
+        <div className="space-y-2">
           <Label htmlFor="price">Price paid</Label>
           <Input
             id="price"
@@ -96,7 +104,7 @@ export function FragranceForm({
             type="number"
             min="1"
             max="5"
-            step="1"
+            step="0.01"
             value={form.my_rating ?? ""}
             onChange={(e) => set("my_rating", numOrNull(e.target.value))}
           />

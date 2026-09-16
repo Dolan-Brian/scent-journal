@@ -74,6 +74,7 @@ function FragranceDetailPage() {
       </div>
 
       <dl className="mt-8 grid gap-5 sm:grid-cols-2">
+        <Field label="Perfumer" value={data.perfumer ?? "—"} />
         <Field
           label="Price paid"
           value={data.price_paid == null ? "—" : `$${data.price_paid}`}

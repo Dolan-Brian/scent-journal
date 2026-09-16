@@ -9,6 +9,7 @@ export interface Fragrance {
   user_id: string | null;
   name: string;
   brand: string;
+  perfumer: string | null;
   price_paid: number | null;
   where_purchased: string | null;
   date_sampled: string | null;
@@ -22,6 +23,7 @@ export type FragranceInput = Omit<Fragrance, "id" | "created_at" | "user_id">;
 export const emptyFragrance: FragranceInput = {
   name: "",
   brand: "",
+  perfumer: null,
   price_paid: null,
   where_purchased: null,
   date_sampled: null,
