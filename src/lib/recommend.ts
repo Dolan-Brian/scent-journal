@@ -1,22 +1,44 @@
 import { supabase } from "@/lib/supabase";
 
-export type Recommendation = {
+export type FragranceRecommendation = {
   name: string;
   brand: string;
   reason: string;
 };
 
-export type RecommendationResult = {
-  pattern_summary: string;
-  recommendations: Recommendation[];
+export type PlantRecommendation = {
+  name: string;
+  scientific_name: string;
+  reason: string;
 };
+
+export type RecommendationResult<T> = {
+  pattern_summary: string;
+  recommendations: T[];
+};
+
+export type FragranceRecommendationResult = RecommendationResult<FragranceRecommendation>;
+export type PlantRecommendationResult = RecommendationResult<PlantRecommendation>;
 
 /**
  * Calls the deployed "recommend-fragrance" edge function with the current
  * user's session. Surfaces the function's own error message (e.g. "No
  * fragrances rated 3 or higher yet") instead of a generic failure.
  */
-export async function recommendFragrances(): Promise<RecommendationResult> {
+export async function recommendFragrances(): Promise<FragranceRecommendationResult> {
+  return invokeRecommendation<FragranceRecommendation>("recommend-fragrance");
+}
+
+/**
+ * Calls the deployed "recommend-plant" edge function with the current
+ * user's session. Uses the same auth and error-handling pattern as the
+ * fragrance recommendation.
+ */
+export async function recommendPlants(): Promise<PlantRecommendationResult> {
+  return invokeRecommendation<PlantRecommendation>("recommend-plant");
+}
+
+async function invokeRecommendation<T>(functionName: string): Promise<RecommendationResult<T>> {
   // Make sure we send the *user's* JWT, not just the publishable key.
   const { data: sessionData } = await supabase.auth.getSession();
   const accessToken = sessionData.session?.access_token;
@@ -26,8 +48,8 @@ export async function recommendFragrances(): Promise<RecommendationResult> {
   }
 
   const { data, error } = await supabase.functions.invoke<
-    RecommendationResult & { error?: string; message?: string }
-  >("recommend-fragrance", {
+    RecommendationResult<T> & { error?: string; message?: string }
+  >(functionName, {
     method: "POST",
     headers: { Authorization: `Bearer ${accessToken}` },
   });
