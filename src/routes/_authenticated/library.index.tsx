@@ -39,14 +39,14 @@ function LibraryPage() {
   if (!data || data.length === 0)
     return (
       <div className="rounded-lg border border-dashed border-border p-10 text-center">
-        <h1 className="font-serif text-xl text-foreground">Nothing logged yet</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Add your first fragrance to start the archive.
+        <h1 className="font-display text-2xl text-foreground">Welcome to your library</h1>
+        <p className="mx-auto mt-2 max-w-sm text-sm text-muted-foreground">
+          It's empty for now. Log the first fragrance you've tried — name, brand, what you paid, and
+          what you thought — and your archive starts here.
         </p>
         <Button asChild className="mt-5">
-          <Link to="/library/new">Add fragrance</Link>
+          <Link to="/library/new">Add a fragrance</Link>
         </Button>
-        <RecommendationPanel />
       </div>
     );
 
